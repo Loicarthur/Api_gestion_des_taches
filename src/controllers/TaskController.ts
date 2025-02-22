@@ -1,9 +1,36 @@
 import { Request, Response } from 'express';
 import Task from '../models/Task';
 import { ITask } from '../interfaces/Task';
+import { TaskService } from '../services/TaskService';
+import { TaskStatus, TaskPriority } from '../interfaces/Task';
 
 export class TaskController {
-  // Créer une tâche
+    private taskService: TaskService;
+
+    constructor() {
+      this.taskService = new TaskService();
+    }
+  
+    // Ajouter cette nouvelle méthode
+    async getTasksByStatus(req: Request, res: Response): Promise<void> {
+      try {
+        const { status } = req.params;
+        const tasks = await this.taskService.getTasksByStatus(status as TaskStatus);
+        res.json(tasks);
+      } catch (error: any) {
+        res.status(500).json({ message: error.message });
+      }
+    }
+  
+    async getOverdueTasks(req: Request, res: Response): Promise<void> {
+      try {
+        const tasks = await this.taskService.getOverdueTasks();
+        res.json(tasks);
+      } catch (error: any) {
+        res.status(500).json({ message: error.message });
+      }
+    }
+ // Créer une tâche
   async createTask(req: Request, res: Response): Promise<void> {
     try {
       const task = new Task(req.body);
