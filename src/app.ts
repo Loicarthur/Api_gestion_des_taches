@@ -15,6 +15,7 @@ dotenv.config();
 // Initialisation de l'application
 const app: Express = express();
 const port = process.env.PORT || 3000;
+
 // Middleware de base 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -24,24 +25,13 @@ app.use(helmet());
 app.use(cors());
 app.use(apiLimiter);
 
-
 // Routes et validation
 app.use('/api/tasks', validateTaskInput, taskRoutes);
+
 // Base route
 app.get('/', (req, res) => {
-    res.send('API Gestion des Tâches');
-  });
-
-
-  // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI!)
-.then(() => {
-  console.log('Connected to MongoDB');
-})
-.catch((error) => {
-  console.error('MongoDB connection error:', error);
+  res.send('API Gestion des Tâches');
 });
-
 
 // Gestionnaire d'erreurs global
 app.use(errorHandler);
@@ -49,17 +39,18 @@ app.use(errorHandler);
 // Swagger documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-// Base route
-app.get('/', (req, res) => {
-  res.send('API Gestion des Tâches');
-});
-
-
-
-// Start server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-
-});
+// Démarrer le serveur uniquement si ce fichier est exécuté directement
+if (require.main === module) {
+  mongoose.connect(process.env.MONGODB_URI!)
+    .then(() => {
+      console.log('Connected to MongoDB');
+      app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+      });
+    })
+    .catch((error) => {
+      console.error('MongoDB connection error:', error);
+    });
+}
 
 export default app;
