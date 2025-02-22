@@ -7,6 +7,8 @@ import cors from 'cors';
 import { errorHandler } from './middleware/errorHandler';
 import { apiLimiter } from './middleware/rateLimiter';
 import { validateTaskInput } from './middleware/validateRequest';
+import swaggerUi from 'swagger-ui-express';
+import { specs } from './config/swagger';
 
 dotenv.config();
 
@@ -44,7 +46,8 @@ mongoose.connect(process.env.MONGODB_URI!)
 // Gestionnaire d'erreurs global
 app.use(errorHandler);
 
-
+// Swagger documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Base route
 app.get('/', (req, res) => {
