@@ -20,3 +20,18 @@ export enum TaskStatus {
     createdAt: Date;
     updatedAt: Date;
   }
+
+  export interface TaskFilters {
+    status?: TaskStatus;
+    priority?: TaskPriority;
+    startDate?: Date;
+    endDate?: Date;
+    search?: string;
+  }
+  
+  export interface PaginationOptions {
+    page: number;
+    limit: number;
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
+  }

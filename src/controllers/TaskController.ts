@@ -4,6 +4,10 @@ import { ITask } from '../interfaces/Task';
 import { TaskService } from '../services/TaskService';
 import { TaskStatus, TaskPriority } from '../interfaces/Task';
 
+
+
+
+
 /**
  * Contrôleur pour la gestion des tâches
  * @class TaskController
@@ -25,6 +29,30 @@ export class TaskController {
      * @param {Response} res - Réponse Express
      * @returns {Promise<void>}
      */
+
+
+
+
+    /**
+ * Recherche des tâches par mot-clé
+ * @async
+ * @param {Request} req - Requête Express contenant le mot-clé de recherche
+ * @param {Response} res - Réponse Express
+ * @returns {Promise<void>}
+ */
+async searchTasks(req: Request, res: Response): Promise<void> {
+    try {
+      const { keyword } = req.query;
+      if (!keyword || typeof keyword !== 'string') {
+        res.status(400).json({ message: 'Le mot-clé de recherche est requis' });
+        return;
+      }
+      const tasks = await this.taskService.searchTasks(keyword);
+      res.json(tasks);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
     async getTasksByStatus(req: Request, res: Response): Promise<void> {
       try {
         const { status } = req.params;
