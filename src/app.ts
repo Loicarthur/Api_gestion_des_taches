@@ -1,6 +1,10 @@
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+// Ajoutez après les autres imports
+import taskRoutes from './routes/taskRoutes';
+
+
 
 dotenv.config();
 
@@ -28,6 +32,10 @@ mongoose.connect(process.env.MONGODB_URI!)
 // Start server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+
 });
+
+// Ajoutez avant app.listen()
+app.use('/api/tasks', taskRoutes);
 
 export default app;
